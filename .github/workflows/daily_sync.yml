@@ -1,0 +1,68 @@
+name: Daily NSE Data Sync
+
+# ── Triggers ────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    # 7:00 PM IST = 13:30 UTC  |  Mon–Fri only
+    - cron: '30 13 * * 1-5'
+
+  # Allow manual run from the GitHub Actions tab any time
+  workflow_dispatch:
+
+# ── Permissions ─────────────────────────────────────────────────────────────
+permissions:
+  contents: write   # needed to push updated CSV files back to the repo
+
+# ── Job ─────────────────────────────────────────────────────────────────────
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60       # kill the job if it hangs beyond 1 hour
+
+    steps:
+
+      # 1. Check out the repo (full history so git push works cleanly)
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1      # shallow clone is enough
+
+      # 2. Set up Python
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'        # cache pip downloads between runs
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4. Run the NSE data sync
+      - name: Sync NSE EOD data
+        run: |
+          cd src
+          python init.py
+        continue-on-error: false   # fail the job if sync fails
+
+      # 5. Commit and push any updated CSV files
+      - name: Commit and push updated data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Stage only the data folder (not code changes)
+          git add src/NSE_eod_data/
+
+          # Commit only if there are actual changes
+          if git diff --cached --quiet; then
+            echo "No data changes today — nothing to commit."
+          else
+            DATE=$(date '+%Y-%m-%d')
+            DAY=$(date '+%A')
+            git commit -m "EOD data update: ${DATE} (${DAY})"
+            git push
+            echo "Pushed successfully."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
