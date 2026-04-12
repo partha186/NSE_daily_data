@@ -338,7 +338,6 @@ Create a task that runs `python src/init.py` from the project directory at marke
 |---------|-------|-----|
 | `ModuleNotFoundError: nse` | Library not installed | `pip install "nse[server]"` |
 | `NSE version mismatch` | Outdated nse library | `pip install -U nse` |
-| `Data version mismatch` | Old eod2_data folder | `python setup_data.py` or `git pull` |
 | `fast-csv-loader not found` | Missing C extension | `pip install fast-csv-loader` |
 | `ConnectionError` on init.py | NSE server unreachable | Check network, retry later |
 | Delivery data never updates | NSE delayed release | System retries automatically next run |
