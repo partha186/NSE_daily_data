@@ -1,0 +1,5 @@
+# No active submodules.
+#
+# Stock data is stored directly in src/NSE_eod_data/ and committed as
+# regular files. Run `python setup_data.py` for a first-time bootstrap
+# if you downloaded this repo as a ZIP (without git clone).

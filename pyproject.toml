@@ -1,0 +1,110 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "eod2"
+version = "9.1.2"
+description = "Automated NSE end-of-day stock data downloader, updater, and analyser"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+
+keywords = [
+    "NSE", "stock", "EOD", "backtest", "candlestick",
+    "India", "finance", "trading", "OHLCV",
+]
+
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Operating System :: OS Independent",
+]
+
+# ── Core runtime dependencies ────────────────────────────────────────────────
+dependencies = [
+    "fast-csv-loader>=1.0.1",
+    "mplfinance==0.12.10b0",
+    "nse[server]==1.2.6",
+    "tzlocal==5.2",
+    "python-dateutil>=2.8",
+    "httpx>=0.24",
+    "numpy>=1.24",
+
+    # pandas: version depends on Python version
+    "pandas==2.0.3; python_version == '3.8'",
+    "pandas==2.2.2; python_version > '3.8' and python_version < '3.13'",
+    "pandas==2.2.3; python_version >= '3.13'",
+
+    # zoneinfo backport for Python 3.8
+    "backports.zoneinfo>=0.2; python_version < '3.9'",
+]
+
+# ── Optional feature groups ───────────────────────────────────────────────────
+[project.optional-dependencies]
+
+# Live NIFTY/BANKNIFTY signal scanner
+scanner = [
+    "yfinance>=0.2",
+    "rich>=13.0",
+]
+
+# Advanced multi-strategy backtester (strategy_runner_V2.py)
+backtest = [
+    "ta>=0.11",
+]
+
+# All optional extras
+all = [
+    "eod2[scanner]",
+    "eod2[backtest]",
+]
+
+# Development / testing
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.0",
+]
+
+# ── Entry points (CLI scripts) ────────────────────────────────────────────────
+[project.scripts]
+eod2        = "init:main"
+eod2-plot   = "plot:main"
+eod2-data-get = "data_get:main"
+eod2-diag   = "funcdefs.diagnostic:main"
+
+# ── Package discovery ─────────────────────────────────────────────────────────
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["funcdefs*", "nse*", "plugin*"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+# ── Pytest configuration ──────────────────────────────────────────────────────
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = "-v --tb=short"
+
+# ── Coverage ──────────────────────────────────────────────────────────────────
+[tool.coverage.run]
+source = ["src"]
+omit = ["tests/*", "src/strategy_runner*.py", "src/live_scanner.py"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
