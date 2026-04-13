@@ -7,8 +7,10 @@ Run this ONCE after creating a new empty repo on GitHub:
 
 It will:
     1. Ask for your GitHub username and new repo name
-    3. Set your new repo as 'origin'
-    5. Do the first push of all your code + data
+    2. Set your new repo as 'origin'
+    3. Stage all files
+    4. Create initial commit
+    5. Push to GitHub
 
 Prerequisites:
     - Git installed and on PATH
@@ -40,22 +42,20 @@ def git(*args, check: bool = True):
 print("=" * 60)
 print("EOD2 — GitHub One-Time Setup")
 print("=" * 60)
-print()
-print("Have you already created an EMPTY repo on GitHub? (y/n): ", end="")
+
+print("\nHave you already created an EMPTY repo on GitHub? (y/n): ", end="")
 if input().strip().lower() != "y":
-    print()
-    print("Please create an empty repo on GitHub first, then rerun this script.")
+    print("\nPlease create an empty repo on GitHub first, then rerun this script.")
     print("Steps:")
     print("  1. Go to https://github.com/new")
-    print("  2. Enter a repo name (e.g. 'partha-personal')")
+    print("  2. Enter a repo name (e.g. 'NSE-personal')")
     print("  3. Set visibility (Public or Private)")
     print("  4. Do NOT add README, .gitignore, or license")
     print("  5. Click 'Create repository'")
     print("  6. Rerun:  python setup_github.py")
     sys.exit(0)
 
-print()
-print("Enter your GitHub username: ", end="")
+print("\nEnter your GitHub username: ", end="")
 username = input().strip()
 
 print("Enter your new repo name (e.g. NSE-personal): ", end="")
@@ -63,34 +63,33 @@ repo_name = input().strip()
 
 new_url = f"https://github.com/{username}/{repo_name}.git"
 
-print()
-print(f"Your repo URL will be: {new_url}")
+print(f"\nYour repo URL will be: {new_url}")
 print("Confirm? (y/n): ", end="")
 if input().strip().lower() != "y":
     print("Aborted.")
     sys.exit(0)
 
-print()
-# print("[1/5] Removing stale submodule cache ...")
-# git("rm", "--cached", "src/eod2_data", check=False)  # ignore if not present
-
-print("\n[2/5] Setting your repo as 'origin' ...")
-git("remote", "set-url", "origin", new_url, check=False)
-# If set-url fails (no origin yet), add it
-result = subprocess.run(
+# ── Step 1: Set remote origin ────────────────────────────────────────────────
+print("\n[1/5] Setting remote origin ...")
+existing = subprocess.run(
     ["git", "remote", "get-url", "origin"],
     cwd=ROOT, capture_output=True, text=True
 )
-# if result.returncode != 0:
-#     git("remote", "add", "origin", new_url)
+if existing.returncode == 0:
+    git("remote", "set-url", "origin", new_url)
+else:
+    git("remote", "add", "origin", new_url)
 
-# # git("remote", "remove", "upstream", check=False)  # remove if exists
-# # git("remote", "add", "upstream", upstream_url)
+# ── Step 2: Verify remote ────────────────────────────────────────────────────
+print("\n[2/5] Verifying remote ...")
+git("remote", "-v")
 
-print("\n[4/5] Staging all files for first commit ...")
+# ── Step 3: Stage all files ──────────────────────────────────────────────────
+print("\n[3/5] Staging all files ...")
 git("add", "--all")
 
-# Check if there's anything to commit
+# ── Step 4: Commit ───────────────────────────────────────────────────────────
+print("\n[4/5] Creating initial commit ...")
 result = subprocess.run(
     ["git", "diff", "--cached", "--stat"],
     cwd=ROOT, capture_output=True, text=True
@@ -98,23 +97,16 @@ result = subprocess.run(
 if not result.stdout.strip():
     print("Nothing new to stage — already committed.")
 else:
-    print("\n[4/5] Creating initial commit ...")
     git("commit", "-m", "Initial commit: NSE_daily_data with personal customisations")
 
-print("\n[5/5] Pushing to GitHub (this may take a while for the data files) ...")
-git("push", "-u", "origin", "main")
+# ── Step 5: Force push ───────────────────────────────────────────────────────
+print("\n[5/5] Pushing to GitHub (this may take a while for large data files) ...")
+git("push", "-u", "origin", "main", "--force")
 
 print()
 print("=" * 60)
 print("Setup complete!")
-print()
-print(f"  Your repo : {new_url}")
-# print(f"  Upstream  : {upstream_url}")
-print()
-print("Daily evening workflow:")
+print(f"\n  Your repo : {new_url}")
+print("\nDaily evening workflow:")
 print("  python push_update.py    (or double-click push_update.bat)")
-print()
-print("To pull future fixes from the original EOD2 project:")
-# print("  git fetch upstream")
-# print("  git merge upstream/main")
 print("=" * 60)
