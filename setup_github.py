@@ -58,7 +58,7 @@ print()
 print("Enter your GitHub username: ", end="")
 username = input().strip()
 
-print("Enter your new repo name (e.g. eod2-personal): ", end="")
+print("Enter your new repo name (e.g. NSE-personal): ", end="")
 repo_name = input().strip()
 
 new_url = f"https://github.com/{username}/{repo_name}.git"
@@ -81,11 +81,11 @@ result = subprocess.run(
     ["git", "remote", "get-url", "origin"],
     cwd=ROOT, capture_output=True, text=True
 )
-if result.returncode != 0:
-    git("remote", "add", "origin", new_url)
+# if result.returncode != 0:
+#     git("remote", "add", "origin", new_url)
 
-git("remote", "remove", "upstream", check=False)  # remove if exists
-# git("remote", "add", "upstream", upstream_url)
+# # git("remote", "remove", "upstream", check=False)  # remove if exists
+# # git("remote", "add", "upstream", upstream_url)
 
 print("\n[4/5] Staging all files for first commit ...")
 git("add", "--all")
@@ -99,7 +99,7 @@ if not result.stdout.strip():
     print("Nothing new to stage — already committed.")
 else:
     print("\n[4/5] Creating initial commit ...")
-    git("commit", "-m", "Initial commit: EOD2 with personal customisations")
+    git("commit", "-m", "Initial commit: NSE_daily_data with personal customisations")
 
 print("\n[5/5] Pushing to GitHub (this may take a while for the data files) ...")
 git("push", "-u", "origin", "main")
