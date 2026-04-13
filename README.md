@@ -323,8 +323,8 @@ See `src/plugin/rsi.py` for a working example.
 
 **Linux / Mac — cron:**
 ```bash
-# Run at 6:30 PM IST on weekdays
-30 18 * * 1-5 cd /path/to/eod2/src && python init.py >> ~/eod2.log 2>&1
+# Run at 9:30 PM IST on weekdays
+30 15 * * 1-5 cd /path/to/eod2/src && python init.py >> ~/eod2.log 2>&1
 ```
 
 **Windows — Task Scheduler:**
