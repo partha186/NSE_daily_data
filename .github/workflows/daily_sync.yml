@@ -3,74 +3,102 @@ name: Daily NSE Data Sync
 # ── Triggers ────────────────────────────────────────────────────────────────
 on:
   schedule:
-    # Mon–Fri only
-    - cron: '30 13 * * 1-5'
-
-  # Allow manual run from the GitHub Actions tab any time
+    - cron: '30 15 * * 1-5'
   workflow_dispatch:
 
 # ── Permissions ─────────────────────────────────────────────────────────────
 permissions:
-  contents: write   # needed to push updated CSV files back to the repo
+  contents: write
 
-# ── Job ─────────────────────────────────────────────────────────────────────
+# ── Jobs ────────────────────────────────────────────────────────────────────
 jobs:
-  sync:
+
+  # ── Job 1: Sync & push EOD data ───────────────────────────────────────────
+  sync_data:
     runs-on: ubuntu-latest
-    timeout-minutes: 60       # kill the job if it hangs beyond 1 hour
+    timeout-minutes: 30
 
     steps:
-
-      # 1. Check out the repo (full history so git push works cleanly)
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1      # shallow clone is enough
+          fetch-depth: 0
 
-      # 2. Set up Python
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'        # cache pip downloads between runs
+          cache: 'pip'
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      # 4. Run the NSE data sync
       - name: Sync NSE EOD data
         run: |
           cd src
           python init.py
-        continue-on-error: false   # fail the job if sync fails
 
-      # 5. Run trading strategies on the freshly synced data
-      - name: Run strategy runner
-        run: |
-          cd src
-          python strategy_runner_V2.py --folder NSE_eod_data/daily --export results.csv
-        continue-on-error: true    # don't block the commit if strategies fail
-
-      # 6. Commit and push updated data + strategy results
-      - name: Commit and push updated data
+      - name: Commit and push EOD data
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Stage data folder and strategy results
           git add src/NSE_eod_data/
-          git add src/results.csv
 
-          # Commit only if there are actual changes
           if git diff --cached --quiet; then
             echo "No data changes today — nothing to commit."
           else
             DATE=$(date '+%Y-%m-%d')
             DAY=$(date '+%A')
-            git commit -m "EOD data + strategy results: ${DATE} (${DAY})"
+            git commit -m "EOD data: ${DATE} (${DAY})"
             git push
-            echo "Pushed successfully."
+            echo "EOD data pushed successfully."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── Job 2: Run strategies & push results ──────────────────────────────────
+  run_strategies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: sync_data        # waits for Job 1 to complete successfully
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run strategy runner
+        run: |
+          cd src
+          python strategy_runner_V2.py --folder NSE_eod_data/daily --export results.csv
+        continue-on-error: true
+
+      - name: Commit and push strategy results
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add src/results.csv
+
+          if git diff --cached --quiet; then
+            echo "No strategy changes — nothing to commit."
+          else
+            DATE=$(date '+%Y-%m-%d')
+            DAY=$(date '+%A')
+            git commit -m "Strategy results: ${DATE} (${DAY})"
+            git push
+            echo "Strategy results pushed successfully."
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

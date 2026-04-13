@@ -19,7 +19,7 @@ Usage:
     python strategy_runner_v2.py --folder eod2_data/daily --sl -3 --capital 100000 --export results.csv
 
     # Find best strategy per stock (slow — tests all param combos)
-    python strategy_runner_v2.py --folder eod2_data/daily --optimize
+    python strategy_runner_v2.py --folder NSE_daily_data/daily --optimize
 """
 
 import argparse
@@ -226,22 +226,20 @@ STRATEGIES = {
     "macd":               strategy_MACD,
     "rsi":                strategy_RSI,
     "wr":                 strategy_WR,
-    "stoch_fast":         strategy_Stochastic_fast,
-    "stoch_slow":         strategy_Stochastic_slow,
     "ichimoku":           strategy_Ichimoku,
 }
 
 # Default params for optimization search
 OPTIMIZE_PARAMS = {
-    "keltner_long":       {"n": range(5, 30, 5)},
-    "bollinger_long":     {"n": range(5, 30, 5), "n_rng": [1, 2, 3, 4]},
-    "ma_long":            {"n": range(10, 110, 10), "ma_type": ["sma", "ema"]},
-    "macd_long":          {"n_slow": range(20, 26), "n_fast": range(10, 16), "n_sign": range(5, 11)},
+    "keltner_long":       {"n": range(5, 15, 5)},
+    "bollinger_long":     {"n": range(5, 15, 5), "n_rng": [1, 2, 3, 4]},
+    "ma_long":            {"n": range(10, 20, 10), "ma_type": ["sma", "ema"]},
+    "macd_long":          {"n_slow": range(10, 10), "n_fast": range(10, 16), "n_sign": range(5, 11)},
     "rsi_long":           {"n": range(3, 15)},
     "wr_long":            {"n": range(3, 15)},
-    "stoch_fast_long":    {"k": range(15, 26), "d": range(5, 11)},
-    "stoch_slow_long":    {"k": range(15, 26), "d": range(5, 11), "dd": range(1, 6)},
-    "ichimoku_long":      {"n_conv": range(5, 16), "n_base": range(20, 36), "n_span_b": [26]},
+    "stoch_fast_long":    {"k": range(10, 20), "d": range(5, 11)},
+    "stoch_slow_long":    {"k": range(10, 20), "d": range(5, 11), "dd": range(1, 6)},
+    "ichimoku_long":      {"n_conv": range(5, 15), "n_base": range(10, 20), "n_span_b": [20]},
 }
 
 
