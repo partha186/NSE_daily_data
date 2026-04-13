@@ -299,25 +299,6 @@ Prices are adjusted for all historical splits and bonus issues.
 
 Add custom indicator panels to `plot.py` by placing a Python file in `src/plugin/` and registering it in `user.json`:
 
-```json
-{
-    "PLOT_PLUGINS": {
-        "RSI": {
-            "name": "rsi",
-            "OB": 80,
-            "OS": 20
-        }
-    }
-}
-```
-
-The plugin file must define two functions:
-- `load(parser)` — register any CLI arguments
-- `main(*args)` — add the indicator panel to the chart
-
-See `src/plugin/rsi.py` for a working example.
-
----
 
 ## Scheduling (run daily)
 
