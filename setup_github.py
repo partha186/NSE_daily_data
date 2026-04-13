@@ -7,9 +7,7 @@ Run this ONCE after creating a new empty repo on GitHub:
 
 It will:
     1. Ask for your GitHub username and new repo name
-    2. Remove the original upstream (BennyThadikaran/eod2) as 'origin'
     3. Set your new repo as 'origin'
-    4. Keep BennyThadikaran/eod2 as 'upstream' so you can pull future fixes
     5. Do the first push of all your code + data
 
 Prerequisites:
@@ -49,7 +47,7 @@ if input().strip().lower() != "y":
     print("Please create an empty repo on GitHub first, then rerun this script.")
     print("Steps:")
     print("  1. Go to https://github.com/new")
-    print("  2. Enter a repo name (e.g. 'eod2-personal')")
+    print("  2. Enter a repo name (e.g. 'partha-personal')")
     print("  3. Set visibility (Public or Private)")
     print("  4. Do NOT add README, .gitignore, or license")
     print("  5. Click 'Create repository'")
@@ -64,7 +62,6 @@ print("Enter your new repo name (e.g. eod2-personal): ", end="")
 repo_name = input().strip()
 
 new_url = f"https://github.com/{username}/{repo_name}.git"
-upstream_url = "https://github.com/BennyThadikaran/eod2.git"
 
 print()
 print(f"Your repo URL will be: {new_url}")
@@ -74,8 +71,8 @@ if input().strip().lower() != "y":
     sys.exit(0)
 
 print()
-print("[1/5] Removing stale submodule cache ...")
-git("rm", "--cached", "src/eod2_data", check=False)  # ignore if not present
+# print("[1/5] Removing stale submodule cache ...")
+# git("rm", "--cached", "src/eod2_data", check=False)  # ignore if not present
 
 print("\n[2/5] Setting your repo as 'origin' ...")
 git("remote", "set-url", "origin", new_url, check=False)
@@ -89,7 +86,7 @@ if result.returncode != 0:
 
 print("\n[3/5] Keeping BennyThadikaran/eod2 as 'upstream' ...")
 git("remote", "remove", "upstream", check=False)  # remove if exists
-git("remote", "add", "upstream", upstream_url)
+# git("remote", "add", "upstream", upstream_url)
 
 print("\n[4/5] Staging all files for first commit ...")
 git("add", "--all")

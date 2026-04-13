@@ -3,7 +3,7 @@ name: Daily NSE Data Sync
 # ── Triggers ────────────────────────────────────────────────────────────────
 on:
   schedule:
-    # 7:00 PM IST = 13:30 UTC  |  Mon–Fri only
+    # Mon–Fri only
     - cron: '30 13 * * 1-5'
 
   # Allow manual run from the GitHub Actions tab any time
