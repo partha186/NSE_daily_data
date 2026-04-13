@@ -84,7 +84,6 @@ result = subprocess.run(
 if result.returncode != 0:
     git("remote", "add", "origin", new_url)
 
-print("\n[3/5] Keeping BennyThadikaran/eod2 as 'upstream' ...")
 git("remote", "remove", "upstream", check=False)  # remove if exists
 # git("remote", "add", "upstream", upstream_url)
 
@@ -116,6 +115,6 @@ print("Daily evening workflow:")
 print("  python push_update.py    (or double-click push_update.bat)")
 print()
 print("To pull future fixes from the original EOD2 project:")
-print("  git fetch upstream")
-print("  git merge upstream/main")
+# print("  git fetch upstream")
+# print("  git merge upstream/main")
 print("=" * 60)
