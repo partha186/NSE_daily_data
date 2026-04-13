@@ -45,14 +45,22 @@ jobs:
           python init.py
         continue-on-error: false   # fail the job if sync fails
 
-      # 5. Commit and push any updated CSV files
+      # 5. Run trading strategies on the freshly synced data
+      - name: Run strategy runner
+        run: |
+          cd src
+          python strategy_runner_V2.py --folder NSE_eod_data/daily --export results.csv
+        continue-on-error: true    # don't block the commit if strategies fail
+
+      # 6. Commit and push updated data + strategy results
       - name: Commit and push updated data
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Stage only the data folder (not code changes)
+          # Stage data folder and strategy results
           git add src/NSE_eod_data/
+          git add src/results.csv
 
           # Commit only if there are actual changes
           if git diff --cached --quiet; then
@@ -60,7 +68,7 @@ jobs:
           else
             DATE=$(date '+%Y-%m-%d')
             DAY=$(date '+%A')
-            git commit -m "EOD data update: ${DATE} (${DAY})"
+            git commit -m "EOD data + strategy results: ${DATE} (${DAY})"
             git push
             echo "Pushed successfully."
           fi

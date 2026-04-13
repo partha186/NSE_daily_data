@@ -175,6 +175,15 @@ while True:
     # Get next trading date to process; exit if no more dates available
     if not funcdefs.dates.nextDate():
         nse.exit()
+        # Run trading strategies on the freshly synced data
+        try:
+            from strategy_runner_V2 import run as run_strategies
+            run_strategies(
+                folder=str(funcdefs.DIR / "daily"),
+                export=str(funcdefs.DIR.parent / "results.csv"),
+            )
+        except Exception as e:
+            logger.warning(f"Strategy runner failed: {e}")
         exit()
 
     # Skip processing if current date is a market holiday
