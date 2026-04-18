@@ -100,7 +100,7 @@ python push_update.py
 
 ## Automating the Evening Push (Windows Task Scheduler)
 
-To run the update automatically every weekday at 7 PM:
+To run the update automatically every weekday at 9:30 PM:
 
 1. Open **Task Scheduler** (search in Start menu)
 2. Click **Create Basic Task**
