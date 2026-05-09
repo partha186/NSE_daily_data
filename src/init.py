@@ -85,10 +85,10 @@ if data_version != funcdefs.config.EXPECTED_DATA_VERSION:
         update_url = "https://github.com/BennyThadikaran/eod2/wiki/Installation#updating-the-git-repo\n"
 
         exit(
-            f"Warning: eod2_data folder needs an update.\n\nFollow instructions at below link to update\n{update_url}"
+            f"Warning: NSE_eod folder needs an update.\n\nFollow instructions at below link to update\n{update_url}"
         )
     else:
-        exit("Warning: eod2_data folder needs an update. Run `setup_data.py` to update")
+        exit("Warning: NSE_eod folder needs an update. Run `setup_data.py` to update")
 
 # ============================================================================
 # EXCEPTION HANDLING SETUP

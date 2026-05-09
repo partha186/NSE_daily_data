@@ -73,7 +73,8 @@ eod2/
 │   │   ├── Plotter.py        # Chart rendering engine
 │   │   ├── Plugin.py         # Plugin loader
 │   │   ├── utils.py          # JSON I/O, CSV loading, indicators, Color
-│   │   └── diagnostic.py     # Data integrity checker
+│   │   ├── diagnostic.py     # Data integrity checker
+│   │   └── csv_read_load/    # Memory-efficient CSV loader (reads from EOF backwards)
 │   │
 │   ├── nse/                  # NSE API wrapper
 │   ├── plugin/               # User-defined indicator plugins
@@ -191,8 +192,11 @@ python plot.py --watch SECTORS --resume
 | `n` | Next chart |
 | `p` | Previous chart |
 | `a` | Add symbol to selection list |
-| `q` | Quit and save selections |
+| `c` | Compare current with another (side-by-side) |
+| `l` | Overlay current with another (correlation) |
+| `h` | Show help |
 | `s` | Screenshot current chart |
+| `q` | Quit and save selections |
 
 ### `data_get.py` — Delivery Analyser
 
@@ -319,7 +323,7 @@ Create a task that runs `python src/init.py` from the project directory at marke
 |---------|-------|-----|
 | `ModuleNotFoundError: nse` | Library not installed | `pip install "nse[server]"` |
 | `NSE version mismatch` | Outdated nse library | `pip install -U nse` |
-| `fast-csv-loader not found` | Missing C extension | `pip install fast-csv-loader` |
+| `csv_read_load` import error | Missing `csv_read_load` folder | Ensure `src/funcdefs/csv_read_load/csv_loader.py` exists |
 | `ConnectionError` on init.py | NSE server unreachable | Check network, retry later |
 | Delivery data never updates | NSE delayed release | System retries automatically next run |
 | Chart shows no RS line | Index file missing | Run `init.py` to sync index data |

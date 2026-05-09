@@ -1,5 +1,3 @@
-# EOD2 — Developer Guide
-
 ## Getting Started
 
 
@@ -266,7 +264,7 @@ The diagnostic tool and rollback logic depend on the exact CSV format. Do not ad
 |---------|----------------|-----------|
 | `nse[server]` | Download NSE data | No |
 | `mplfinance` | Candlestick charts | No |
-| `fast-csv-loader` | Fast CSV reading (C extension) | No |
+| `csv_loader` | CSV reading (C extension) | No |
 | `pandas` | Data manipulation | No |
 | `tzlocal` | Local timezone detection | No |
 | `httpx` | HTTP client (used by nse) | No |

@@ -7,12 +7,7 @@ from typing import Any, List, Optional, Tuple
 
 import pandas as pd
 
-try:
-    from fast_csv_loader import csv_loader
-except ModuleNotFoundError:
-    raise ImportError(
-        "fast-csv-loader module is required. Run `pip install fast-csv-loader`"
-    )
+from funcdefs.csv_read_load.csv_loader import csv_loader
 
 
 class Color:

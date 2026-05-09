@@ -1,4 +1,3 @@
-fast_csv_loader>=1.0.1
 mplfinance==0.12.10b0
 nse[server]==1.2.6
 numpy>=1.26.0

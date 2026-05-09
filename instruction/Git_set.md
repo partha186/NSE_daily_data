@@ -4,14 +4,7 @@
 
 ### Step 1 — Create a new empty repo on GitHub
 
-1. Go to https://github.com/new
-2. Set the **Repository name** (e.g. `eod2-personal`)
-3. Choose **Public** or **Private**
-4. **Do NOT** tick "Add a README file", "Add .gitignore", or "Choose a license"
-5. Click **Create repository**
-6. Copy the repo URL shown (e.g. `https://github.com/YOURNAME/eod2-personal.git`)
 
----
 
 ### Step 2 — Configure Git credentials (if not done already)
 

@@ -16,6 +16,20 @@ Main Features:
     - Side-by-side comparison of two stocks
     - Overlay mode for correlation analysis
 
+    while True:
+    plotter.plot(sym)          ← opens window, BLOCKS
+        │
+        │  user presses 'n'
+        │
+    _on_key_press()
+        self.key = "n"
+        plt.close("all")       ← unblocks plot()
+        │
+    answer = plotter.key       ← "n"
+    plotter.idx += 1
+    (loop again → next chart)
+
+
 Keyboard Controls:
     n = Next chart
     p = Previous chart
