@@ -1,5 +1,5 @@
 {
-   "lastUpdate": "2026-07-15T00:00:00+05:30",
+   "lastUpdate": "2026-07-16T00:00:00+05:30",
    "data-version": 3.2,
    "year": 2026,
    "holidays": {
@@ -28,7 +28,7 @@
    "special_sessions": [
       "2026-02-01T00:00:00"
    ],
-   "special_sessions_last_update": "2026-07-15",
+   "special_sessions_last_update": "2026-07-16",
    "equityActions": [
       {
          "bcEndDate": "-",
